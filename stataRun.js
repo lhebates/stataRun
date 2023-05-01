@@ -24,6 +24,26 @@ function saveToFile(code) {
         vscode.window.showWarningMessage(mgs);
      }
 }
+
+
+function includeToFile(code) {
+    if (code) {
+        var temp = os.tmpdir();
+        var filePath = temp +"/StataRun"+Date.now();
+        filePath +='.do';
+         fs.writeFile(filePath, code + "\n", (err) => {
+             if (err) throw err;
+             console.log('The file has been saved!');
+           });
+         const includeFileCommand = 'include '+filePath;
+         return sendCode.send(includeFileCommand);
+         //vscode.window.showInformationMessage(filePath);
+     }
+     else {
+        let mgs = 'Document is empty'
+        vscode.window.showWarningMessage(mgs);
+     }
+}
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 
@@ -112,6 +132,7 @@ function activate(context) {
         context.subscriptions.push(runDown);
 
     });
+
     let runCurrent = vscode.commands.registerCommand('stataRun.runCurrent', function () {
         // Run Selection from current line to bottom
         let editor = CheckEditor(vscode.window.activeTextEditor)
@@ -153,8 +174,116 @@ function activate(context) {
                 ShowError()
             }
         }
-        context.subscriptions.push(runFront);
+        context.subscriptions.push(runFront);   
+    });
 
+
+
+    let includeAll = vscode.commands.registerCommand('stataRun.includeAll', function () {
+        // Run (include) Full file
+        let editor = CheckEditor(vscode.window.activeTextEditor)
+        if (editor){
+            let code = editor.document.getText()
+            if (code.length > 0){
+                // If document is unsaved, then save temp file and run the do-file
+                if (editor.document.isUntitled){
+                    includeToFile(code)
+                }
+                // Else just run the do-file (include)
+                else {
+                    var cwd = editor.document.uri.fsPath;
+                    sendCode.send('include `"' + cwd + '"\'')
+                }
+            }
+            else {
+                ShowError()
+            }
+        }
+        context.subscriptions.push(includeAll);
+    });
+
+    let includeSelection = vscode.commands.registerCommand('stataRun.includeSelection', function () {
+        // Run (include) Selection text
+        let editor = CheckEditor(vscode.window.activeTextEditor)
+        if (editor){
+            let selection = editor.selection;
+            let code = editor.document.getText(selection);
+            if (code){
+                includeToFile(code)
+            }
+            else {
+                ShowError()
+            }
+        }
+        context.subscriptions.push(includeSelection);
+    });
+
+    let includeDown = vscode.commands.registerCommand('stataRun.includeDown', function () {
+        // Run (include) Selection from current line to bottom
+        let editor = CheckEditor(vscode.window.activeTextEditor)
+        if (editor){
+            const position = editor.selection.active.line
+            const lines = editor.document.lineCount -1
+            const first = new vscode.Position(position,0)
+            const lastpos= editor.document.lineAt(lines)
+            const last = new vscode.Position(lines,lastpos.range.end.character)
+
+            if (first != last) {
+                const range = new vscode.Range(first,last);
+                var code = editor.document.getText(range);
+            }
+            if (code){
+                includeToFile(code)
+            }
+            else {
+                ShowError()
+            }
+        }
+        context.subscriptions.push(includeDown);
+    });
+
+    let includeCurrent = vscode.commands.registerCommand('stataRun.includeCurrent', function () {
+        // Run (include) Selection from current line to bottom
+        let editor = CheckEditor(vscode.window.activeTextEditor)
+        if (editor){
+            const position = editor.selection.active
+            const first = new vscode.Position(position.line,0)
+            const lastpos= editor.document.lineAt(position.line)
+            const last = new vscode.Position(position.line, lastpos.range.end.character)
+            if (first != last) {
+                const range = new vscode.Range(first, last);
+                var code = editor.document.getText(range);
+            }
+            if (code){
+                includeToFile(code)
+            }
+            else {
+                ShowError()
+            }
+        }
+        context.subscriptions.push(includeCurrent);
+    });
+
+    let includeFront= vscode.commands.registerCommand('stataRun.includeFront', function () {
+        // Run (include) Selection from current line to bottom
+        let editor = CheckEditor(vscode.window.activeTextEditor)
+        if (editor){
+            const position = editor.selection.active.line
+            const first = new vscode.Position(0,0)
+            const lastpos= editor.document.lineAt(position)
+            const last = new vscode.Position(position,lastpos.range.end.character)
+            if (first != last) {
+                const range = new vscode.Range(first,last);
+                var code = editor.document.getText(range);
+            }
+            if (code){
+                includeToFile(code)
+            }
+            else {
+                ShowError()
+            }
+        }
+        context.subscriptions.push(includeFront);     
     });
 }
 exports.activate = activate;

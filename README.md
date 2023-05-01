@@ -4,12 +4,19 @@ stataRun allow you to run  stata codes (.do .ado) and commands from within Visua
 
 ## Features
 
-The following command and keyboard shortcut are implemented (crtl to be replace by cmd on MacOS)
-- shift+ctrl+a: Run All Lines ==> This will run the entire file
-- shift+ctrl+s: Run Selection ==> To run a given slection. If no selection is made it default to Run All
-- shift+ctrl+c: Run Current Line ==> This will run the current line code
-- shift+ctrl+d: Run Downward  Lines==> from current line to downward
-- shift+ctrl+f: Run Frontward Lines ==> from first line till current line
+The following command and keyboard shortcut are implemented (ctrl to be replace by cmd on MacOS)
+- shift+ctrl+a: Run (do) All Lines ==> This will run the entire file
+- shift+ctrl+s: Run (do) Selection ==> To run a given selection. If no selection is made it default to Run All
+- shift+ctrl+c: Run (do) Current Line ==> This will run the current line code
+- shift+ctrl+d: Run (do) Downward  Lines==> from current line to downward
+- shift+ctrl+f: Run (do) Frontward Lines ==> from first line till current line
+
+For execution with include, the following command and keyboard shortcut are implemented (ctrl to be replace by cmd on MacOS)
+- (shortcut undefined): Run (include) All Lines ==> This will run the entire file
+- cmd+enter (with text selected): Run (include) Selection ==> To run a given selection. <!-- If no selection is made it default to Run All -->
+- cmd+enter (without text selected): Run (include) Current Line ==> This will run the current line code
+- (shortcut undefined): Run (include) Downward  Lines==> from current line to downward
+- (shortcut undefined): Run (include) Frontward Lines ==> from first line till current line
 
 Settings derived from [stata-exec](https://github.com/kylebarron/stata-exec), which provide the same features for Atom.
 ![run-command](./images/config.png)
@@ -65,7 +72,8 @@ Only tested with Mac Os so far. Please and try create issues if any. Feel free t
 
 ## Installation
 
-Install as a normal vscode extension by searcing for stataRun in the vscode extension marketplace
+Install as a normal vscode extension by searching for stataRun in the vscode extension marketplace
 ## Release
-2.0.1
-  - Improvement for working on Windows and Linux
+2.0.4
+  - Added functionality to execution in stata by include, rather than do
+  - Added stata language condition in all stataRun keyboard shortcuts, so that the shortcuts will not affect other programming languages

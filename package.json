@@ -3,7 +3,7 @@
     "icon": "images/icon.png",
     "displayName": "stataRun",
     "description": "Run Stata Code from vsCode",
-    "version": "2.0.1",
+    "version": "2.0.4",
     "publisher": "Yeaoh",
     "engines": {
         "vscode": "^1.25.0"
@@ -16,7 +16,12 @@
         "onCommand:stataRun.runSelection",
         "onCommand:stataRun.runCurrent",
         "onCommand:stataRun.runDown",
-        "onCommand:stataRun.runFront"
+        "onCommand:stataRun.runFront",
+        "onCommand:stataRun.includeAll",
+        "onCommand:stataRun.includeSelection",
+        "onCommand:stataRun.includeCurrent",
+        "onCommand:stataRun.includeDown",
+        "onCommand:stataRun.includeFront"
     ],
     "main": "./stataRun.js",
     "contributes": {
@@ -40,6 +45,26 @@
             {
                 "command": "stataRun.runFront",
                 "title": "stataRun: Frontward Lines"
+            },
+            {
+                "command": "stataRun.includeAll",
+                "title": "stataRun: (include) All Lines"
+            },
+            {
+                "command": "stataRun.includeSelection",
+                "title": "stataRun: (include) Selection"
+            },
+            {
+                "command": "stataRun.includeCurrent",
+                "title": "stataRun: (include) Current line"
+            },
+            {
+                "command": "stataRun.includeDown",
+                "title": "stataRun: (include) Downward Lines"
+            },
+            {
+                "command": "stataRun.includeFront",
+                "title": "stataRun: (include) Frontward Lines"
             }
         ],
         "configuration": [
@@ -103,31 +128,61 @@
                 "key": "shift+ctrl+a",
                 "mac": "shift+cmd+a",
                 "command": "stataRun.runAll",
-                "when": "editorTextFocus"
+                "when": "editorTextFocus && editorLangId == 'stata'"
             },
             {
                 "key": "shift+ctl+s",
                 "mac": "shift+cmd+s",
                 "command": "stataRun.runSelection",
-                "when": "editorTextFocus"
+                "when": "editorTextFocus && editorLangId == 'stata'"
             },
             {
                 "key": "shift+ctl+c",
                 "mac": "shift+cmd+c",
                 "command": "stataRun.runCurrent",
-                "when": "editorTextFocus"
+                "when": "editorTextFocus && editorLangId == 'stata'"
             },
             {
                 "key": "shift+ctl+d",
                 "mac": "shift+cmd+d",
                 "command": "stataRun.runDown",
-                "when": "editorTextFocus"
+                "when": "editorTextFocus && editorLangId == 'stata'"
             },
             {
                 "key": "shift+ctl+f",
                 "mac": "shift+cmd+f",
                 "command": "stataRun.runFront",
-                "when": "editorTextFocus"
+                "when": "editorTextFocus && editorLangId == 'stata'"
+            },
+            {
+                "key": "",
+                "mac": "shift+cmd+a",
+                "command": "stataRun.includeAll",
+                "when": "editorTextFocus && editorLangId == 'stata'"
+            },
+            {
+                "key": "ctrl+enter",
+                "mac": "cmd+enter",
+                "command": "stataRun.includeSelection",
+                "when": "editorTextFocus && editorLangId == 'stata' && editorHasSelection"
+            },
+            {
+                "key": "ctrl+enter",
+                "mac": "cmd+enter",
+                "command": "stataRun.includeCurrent",
+                "when": "editorTextFocus && editorLangId == 'stata' && (!editorHasSelection)"
+            },
+            {
+                "key": "",
+                "mac": "",
+                "command": "stataRun.includeDown",
+                "when": "editorTextFocus && editorLangId == 'stata'"
+            },
+            {
+                "key": "",
+                "mac": "",
+                "command": "stataRun.includeFront",
+                "when": "editorTextFocus && editorLangId == 'stata'"
             }
         ],
         "menus": {
@@ -156,6 +211,32 @@
                     "when": "resourceLangId == stata",
                     "command": "stataRun.runFront",
                     "group": "stataRun"
+                },
+
+                {
+                    "when": "resourceLangId == stata",
+                    "command": "stataRun.includeAll",
+                    "group": "stataRun"
+                },
+                {
+                    "when": "resourceLangId == stata",
+                    "command": "stataRun.includeSelection",
+                    "group": "stataRun"
+                },
+                {
+                    "when": "resourceLangId == stata",
+                    "command": "stataRun.includeCurrent",
+                    "group": "stataRun"
+                },
+                {
+                    "when": "resourceLangId == stata",
+                    "command": "stataRun.includeDown",
+                    "group": "stataRun"
+                },
+                {
+                    "when": "resourceLangId == stata",
+                    "command": "stataRun.includeFront",
+                    "group": "stataRun"
                 }
             ]
         }
@@ -167,7 +248,7 @@
     "devDependencies": {
         "@types/mocha": "^2.2.42",
         "@types/node": "^7.0.43",
-        "eslint": "^4.19.1",
+        "eslint": "^8.39.0",
         "vscode": "^1.1.6"
     },
     "dependencies": {
